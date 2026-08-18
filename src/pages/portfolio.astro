@@ -1,0 +1,17 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AlbumCard from '../components/AlbumCard.astro';
+import { albums } from '../data/albums';
+---
+
+<Layout title="Portfolio | Dmitry Kriukov" description="Selected photo sessions and wedding stories in Montenegro by Dmitry Kriukov." image={albums[0].cover}>
+ <section class="mb-16 max-w-3xl" data-reveal>
+    <p class="mb-5 text-xs uppercase tracking-[0.28em] text-neutral-500" data-en="Story archive" data-ru="Архив историй">Story archive</p>
+   <h1 class="text-5xl font-medium tracking-tight text-white md:text-7xl" data-en="People, light and place." data-ru="Люди, свет и место.">People, light and place.</h1>
+    <p class="mt-7 max-w-xl text-lg leading-relaxed text-neutral-400" data-en="Selected series from the coast and the mountains. Open an album to see the full story." data-ru="Избранные серии с побережья и из гор. Откройте альбом, чтобы посмотреть всю съемку.">Selected series from the coast and the mountains. Open an album to see the full story.</p>
+ </section>
+
+ <section class="grid gap-x-6 gap-y-12 md:grid-cols-2">
+  {albums.map((album, index) => <AlbumCard album={album} featured={index === 0} />)}
+ </section>
+</Layout>

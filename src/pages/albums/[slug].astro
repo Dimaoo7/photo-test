@@ -1,0 +1,30 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PhotoGallery from '../../components/PhotoGallery.astro';
+import { albums } from '../../data/albums';
+
+export function getStaticPaths() {
+ return albums.map((album) => ({ params: { slug: album.slug }, props: { album } }));
+}
+
+const { album } = Astro.props;
+---
+
+<Layout title={`${album.title} | Dmitry Kriukov`} description={album.description} image={album.cover}>
+ <a href="/portfolio" class="mb-10 inline-flex items-center gap-3 border border-neutral-700 px-5 py-3 text-xs uppercase tracking-[0.18em] text-neutral-300 transition hover:border-white hover:bg-white hover:text-black" data-en="← Back to portfolio" data-ru="← Назад к портфолио">← Back to portfolio</a>
+ <header class="mb-12 grid gap-8 border-b border-neutral-800 pb-12 md:grid-cols-[1fr_0.8fr] md:items-end">
+  <div>
+    <p class="mb-5 text-xs uppercase tracking-[0.28em] text-neutral-500" data-en={album.category} data-ru={album.categoryRu}>{album.category}</p>
+    <h1 class="text-5xl font-medium tracking-tight text-white md:text-7xl" data-en={album.title} data-ru={album.titleRu}>{album.title}</h1>
+  </div>
+  <div class="max-w-sm text-sm leading-relaxed text-neutral-400 md:justify-self-end">
+    <p data-en={album.description} data-ru={album.descriptionRu}>{album.description}</p>
+   <div class="mt-6 grid grid-cols-2 gap-4 border-t border-neutral-800 pt-4 text-xs uppercase tracking-[0.16em] text-neutral-500">
+    <span data-en={album.location} data-ru={album.locationRu}>{album.location}</span>
+    <span class="text-right">{album.date}</span>
+   </div>
+  </div>
+ </header>
+
+ <PhotoGallery album={album} />
+</Layout>

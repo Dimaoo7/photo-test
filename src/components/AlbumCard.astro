@@ -1,0 +1,28 @@
+---
+import type { Album } from '../data/albums';
+
+interface Props {
+ album: Album;
+ featured?: boolean;
+}
+
+const { album, featured = false } = Astro.props;
+---
+
+<a href={`/albums/${album.slug}`} data-reveal class:list={['group block reveal', featured && 'md:col-span-2']}>
+ <div class:list={['relative overflow-hidden bg-neutral-900', featured ? 'aspect-[16/10]' : 'aspect-[4/5]']}>
+    <img src={album.cover} alt={album.title} loading={featured ? 'eager' : 'lazy'} fetchpriority={featured ? 'high' : 'auto'} decoding="async" sizes={featured ? '(min-width: 768px) 66vw, 100vw' : '(min-width: 768px) 33vw, 100vw'} class="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+  <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent"></div>
+  <div class="absolute inset-x-5 bottom-5 flex items-end justify-between gap-4">
+   <div>
+    <p class="mb-2 text-[10px] uppercase tracking-[0.24em] text-white/65" data-en={album.category} data-ru={album.categoryRu}>{album.category}</p>
+    <h3 class="text-2xl font-medium text-white" data-en={album.title} data-ru={album.titleRu}>{album.title}</h3>
+   </div>
+   <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/40 text-white transition group-hover:bg-white group-hover:text-black">↗</span>
+  </div>
+ </div>
+ <div class="mt-3 flex justify-between text-xs uppercase tracking-[0.18em] text-neutral-500">
+  <span data-en={album.location} data-ru={album.locationRu}>{album.location}</span>
+  <span><span data-en={`${album.photos.length} photos`} data-ru={`${album.photos.length} кадров`}>{album.photos.length} photos</span></span>
+ </div>
+</a>

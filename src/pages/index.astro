@@ -1,0 +1,47 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AlbumCard from '../components/AlbumCard.astro';
+import { albums } from '../data/albums';
+---
+
+<Layout title="Dmitry Kriukov | Photographer in Montenegro" description="Wedding stories, portraits and honest frames on the Adriatic coast by Dmitry Kriukov." image={albums[0].cover}>
+ <section class="grid min-h-[66vh] items-end gap-10 py-20 md:grid-cols-[1.25fr_0.75fr]" data-reveal>
+  <div>
+     <p class="mb-8 text-xs uppercase tracking-[0.28em] text-neutral-500" data-en="Photographer / Montenegro" data-ru="Фотограф / Черногория">Photographer / Montenegro</p>
+     <h1 class="max-w-4xl text-6xl font-medium leading-[0.95] tracking-tight text-white md:text-8xl" data-en="Light that stays." data-ru="Свет, который остается.">Light that stays.</h1>
+  </div>
+  <div class="max-w-sm pb-2 md:justify-self-end">
+     <p class="text-lg leading-relaxed text-neutral-400" data-en="Wedding stories, portraits and honest frames on the Adriatic coast." data-ru="Свадебные истории, портреты и честные кадры на побережье Адриатики.">Wedding stories, portraits and honest frames on the Adriatic coast.</p>
+     <a href="/portfolio" class="mt-8 inline-flex items-center gap-4 border-b border-white pb-2 text-xs uppercase tracking-[0.18em] text-white transition-opacity hover:opacity-60" data-en="View portfolio ↗" data-ru="Смотреть портфолио ↗">View portfolio ↗</a>
+  </div>
+ </section>
+
+ <section id="gallery" class="py-16">
+  <div class="mb-8 flex items-end justify-between gap-6">
+   <div>
+    <p class="mb-3 text-xs uppercase tracking-[0.24em] text-neutral-500" data-en="Selected work" data-ru="Избранное">Selected work</p>
+    <h2 class="text-3xl font-medium text-white" data-en="Recent stories" data-ru="Последние истории">Recent stories</h2>
+   </div>
+    <a href="/portfolio" class="hidden text-xs uppercase tracking-[0.18em] text-neutral-500 transition hover:text-white sm:block" data-en="All albums →" data-ru="Все альбомы →">All albums →</a>
+  </div>
+  <div class="grid gap-8 md:grid-cols-2">
+   {albums.map((album, index) => <AlbumCard album={album} featured={index === 0} />)}
+  </div>
+ </section>
+
+ <section id="about" class="grid gap-8 border-y border-neutral-800 py-20 md:grid-cols-2">
+    <p class="text-xs uppercase tracking-[0.24em] text-neutral-500" data-en="About the photographer" data-ru="О фотографе">About the photographer</p>
+  <div class="max-w-xl">
+     <h2 class="text-3xl font-medium leading-tight text-white" data-en="I photograph how it feels, not just what happens." data-ru="Снимаю не события, а то, как они ощущаются.">I photograph how it feels, not just what happens.</h2>
+     <p class="mt-6 leading-relaxed text-neutral-400" data-en="I work quietly and attentively, noticing the gestures, pauses and small details that make your story yours." data-ru="Работаю спокойно и внимательно: замечаю жесты, паузы и маленькие детали, из которых складывается ваша история.">I work quietly and attentively, noticing the gestures, pauses and small details that make your story yours.</p>
+  </div>
+ </section>
+
+ <section id="contacts" class="py-20">
+    <p class="mb-4 text-xs uppercase tracking-[0.24em] text-neutral-500" data-en="A new story" data-ru="Новая история">A new story</p>
+  <div class="flex flex-col justify-between gap-8 md:flex-row md:items-end">
+     <h2 class="max-w-2xl text-4xl font-medium leading-tight text-white md:text-6xl" data-en="Let's find your light." data-ru="Давайте выберем ваш свет.">Let's find your light.</h2>
+     <a href="mailto:hello@example.com" class="inline-flex w-fit border border-white px-6 py-4 text-xs uppercase tracking-[0.18em] text-white transition hover:bg-white hover:text-black" data-en="Write to me" data-ru="Написать мне">Write to me</a>
+  </div>
+ </section>
+</Layout>

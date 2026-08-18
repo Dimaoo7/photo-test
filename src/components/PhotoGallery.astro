@@ -1,0 +1,136 @@
+---
+import type { Album } from '../data/albums';
+
+interface Props {
+ album: Album;
+}
+
+const { album } = Astro.props;
+---
+
+<div class="space-y-8" data-gallery data-album-title={album.title}>
+ <div class="flex flex-col justify-between gap-4 border-y border-neutral-800 py-5 sm:flex-row sm:items-center">
+  <div>
+  <p class="text-xs uppercase tracking-[0.2em] text-neutral-500"><span data-en={`${album.photos.length} photographs`} data-ru={`${album.photos.length} фотографий`}>{album.photos.length} photographs</span></p>
+  <p class="mt-1 text-sm text-neutral-400" data-en="Download one frame or the complete series as a single archive." data-ru="Можно скачать отдельный кадр или всю серию одним архивом.">Download one frame or the complete series as a single archive.</p>
+  </div>
+  <div class="flex flex-wrap items-center gap-3">
+   <label for="album-format" class="text-xs uppercase tracking-[0.16em] text-neutral-500" data-en="Format" data-ru="Формат">Format</label>
+   <select id="album-format" data-album-format class="border border-neutral-700 bg-neutral-950 px-3 py-3 text-xs uppercase tracking-[0.16em] text-white outline-none focus:border-white">
+    <option value="jpg">JPEG</option>
+    <option value="webp">WEBP</option>
+   </select>
+   <button type="button" data-download-album class="inline-flex items-center justify-center gap-3 border border-white bg-white px-5 py-3 text-xs font-medium uppercase tracking-[0.16em] text-black transition hover:bg-transparent hover:text-white disabled:cursor-wait disabled:opacity-60">
+    <span data-download-label data-en="Download full album" data-ru="Скачать весь альбом">Download full album</span>
+   </button>
+  </div>
+ </div>
+
+ <div class="columns-1 gap-5 sm:columns-2">
+  {album.photos.map((photo) => (
+  <figure class="group mb-5 break-inside-avoid reveal" data-reveal>
+    <div class="relative overflow-hidden bg-neutral-900">
+     <button type="button" data-photo-open data-photo-id={photo.id} data-photo-src={photo.download} data-photo-title={photo.title} data-photo-title-ru={photo.titleRu} class="block w-full cursor-zoom-in text-left">
+      <img src={photo.image} alt={`${album.title}, ${photo.title}`} loading="lazy" class="w-full transition duration-700 group-hover:scale-[1.02]" />
+     </button>
+    </div>
+    <figcaption class="flex justify-between gap-4 pt-3 text-xs uppercase tracking-[0.16em] text-neutral-500">
+     <span data-en={photo.title} data-ru={photo.titleRu}>{photo.title}</span>
+    <button type="button" data-photo-open data-photo-id={photo.id} data-photo-src={photo.download} data-photo-title={photo.title} data-photo-title-ru={photo.titleRu} class="border-b border-neutral-700 pb-1 text-[10px] text-neutral-400 transition hover:border-white hover:text-white" data-en="View / download" data-ru="Открыть / скачать">View / download</button>
+    </figcaption>
+   </figure>
+  ))}
+ </div>
+</div>
+
+<div data-lightbox hidden class="lightbox fixed inset-0 z-40 place-items-center bg-black/95 p-5 md:p-10">
+ <button type="button" data-lightbox-close class="absolute inset-0 cursor-default" aria-label="Close photo"></button>
+ <div class="relative z-10 flex max-h-full w-full max-w-6xl flex-col">
+  <button type="button" data-lightbox-close class="absolute right-0 top-0 z-10 flex h-11 w-11 items-center justify-center border border-white/40 bg-black/40 text-xl text-white transition hover:bg-white hover:text-black" aria-label="Close photo">×</button>
+  <img data-lightbox-image src="" alt="" class="max-h-[72vh] w-full object-contain" />
+  <div class="flex flex-col justify-between gap-4 border-t border-white/20 pt-4 sm:flex-row sm:items-center">
+   <p data-lightbox-title class="text-sm uppercase tracking-[0.16em] text-white"></p>
+   <div class="flex items-center gap-3">
+    <label for="photo-format" class="text-xs uppercase tracking-[0.16em] text-neutral-400" data-en="Format" data-ru="Формат">Format</label>
+    <select id="photo-format" data-photo-format class="border border-white/30 bg-black px-3 py-3 text-xs uppercase tracking-[0.16em] text-white outline-none focus:border-white">
+     <option value="jpg">JPEG</option>
+     <option value="webp">WEBP</option>
+    </select>
+    <a data-lightbox-download href="" download class="border border-white bg-white px-5 py-3 text-xs uppercase tracking-[0.16em] text-black transition hover:bg-transparent hover:text-white" data-en="Download photo" data-ru="Скачать фото">Download photo</a>
+   </div>
+  </div>
+ </div>
+</div>
+
+<script define:vars={{ photos: album.photos, slug: album.slug }}>
+ const gallery = document.querySelector('[data-gallery]');
+ const button = gallery?.querySelector('[data-download-album]');
+ const label = gallery?.querySelector('[data-download-label]');
+ const albumFormat = gallery?.querySelector('[data-album-format]');
+ const lightbox = document.querySelector('[data-lightbox]');
+ const lightboxImage = lightbox?.querySelector('[data-lightbox-image]');
+ const lightboxTitle = lightbox?.querySelector('[data-lightbox-title]');
+ const lightboxDownload = lightbox?.querySelector('[data-lightbox-download]');
+ const photoFormat = lightbox?.querySelector('[data-photo-format]');
+ const labels = {
+  en: { idle: 'Download full album', preparing: 'Preparing archive...', done: 'Archive downloaded', error: 'Download failed' },
+  ru: { idle: 'Скачать весь альбом', preparing: 'Готовим архив...', done: 'Архив скачан', error: 'Не удалось скачать' },
+ };
+ const currentLanguage = () => document.documentElement.lang === 'ru' ? 'ru' : 'en';
+ const resetLabel = () => { if (label && !button?.hasAttribute('disabled')) label.textContent = labels[currentLanguage()].idle; };
+ document.addEventListener('languagechange', resetLabel);
+ const makeDownloadUrl = (source, format) => source.replace('auto=format', `fm=${format}`);
+ const closeLightbox = () => {
+  if (!lightbox) return;
+  lightbox.hidden = true;
+  document.body.classList.remove('lightbox-open');
+ };
+ const openLightbox = (trigger) => {
+  if (!lightbox || !lightboxImage || !lightboxTitle || !lightboxDownload) return;
+  const source = trigger.dataset.photoSrc;
+  const format = photoFormat?.value || 'jpg';
+  lightboxImage.src = source;
+  lightboxImage.alt = trigger.dataset.photoTitle || '';
+  lightboxTitle.textContent = currentLanguage() === 'ru' ? trigger.dataset.photoTitleRu : trigger.dataset.photoTitle;
+  lightboxDownload.href = makeDownloadUrl(source, format);
+  lightboxDownload.download = `${slug}-${trigger.dataset.photoId || 'photo'}.${format}`;
+  lightbox.hidden = false;
+  document.body.classList.add('lightbox-open');
+ };
+ gallery?.querySelectorAll('[data-photo-open]').forEach((trigger) => trigger.addEventListener('click', () => openLightbox(trigger)));
+ lightbox?.querySelectorAll('[data-lightbox-close]').forEach((closeButton) => closeButton.addEventListener('click', closeLightbox));
+ photoFormat?.addEventListener('change', () => {
+  if (lightboxDownload && lightboxImage) lightboxDownload.href = makeDownloadUrl(lightboxImage.src, photoFormat.value);
+ });
+ document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeLightbox(); });
+
+ button?.addEventListener('click', async () => {
+  if (!label || !button) return;
+  button.setAttribute('disabled', 'true');
+  label.textContent = labels[currentLanguage()].preparing;
+
+  try {
+    const { default: JSZip } = await import('https://cdn.jsdelivr.net/npm/jszip@3.10.1/+esm');
+   const zip = new JSZip();
+    const format = albumFormat?.value || 'jpg';
+   await Promise.all(photos.map(async (photo) => {
+     const response = await fetch(makeDownloadUrl(photo.download, format));
+    if (!response.ok) throw new Error(`Unable to download ${photo.id}`);
+     zip.file(`${slug}-${photo.id}.${format}`, await response.blob());
+   }));
+   const archive = await zip.generateAsync({ type: 'blob' });
+   const url = URL.createObjectURL(archive);
+   const link = document.createElement('a');
+   link.href = url;
+   link.download = `${slug}.zip`;
+   link.click();
+   URL.revokeObjectURL(url);
+  label.textContent = labels[currentLanguage()].done;
+  } catch {
+  label.textContent = labels[currentLanguage()].error;
+  } finally {
+   button.removeAttribute('disabled');
+  window.setTimeout(resetLabel, 2500);
+  }
+ });
+</script>
