@@ -87,6 +87,18 @@ const { album } = Astro.props;
  const resetLabel = () => { if (label && !button?.hasAttribute('disabled')) label.textContent = labels[currentLanguage()].idle; };
  document.addEventListener('languagechange', resetLabel);
  const makeDownloadUrl = (source, format) => source.replace('auto=format', `fm=${format}`);
+ const downloadPhoto = async (event) => {
+  event.preventDefault();
+  if (!lightboxDownload) return;
+  const response = await fetch(lightboxDownload.href);
+  if (!response.ok) throw new Error('Photo download failed');
+  const url = URL.createObjectURL(await response.blob());
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = lightboxDownload.download;
+  link.click();
+  URL.revokeObjectURL(url);
+ };
  const closeLightbox = () => {
   if (!lightbox) return;
   lightbox.hidden = true;
@@ -112,6 +124,7 @@ const { album } = Astro.props;
  previousButton?.addEventListener('click', () => movePhoto(-1));
  nextButton?.addEventListener('click', () => movePhoto(1));
  lightbox?.querySelectorAll('[data-lightbox-close]').forEach((closeButton) => closeButton.addEventListener('click', closeLightbox));
+ lightboxDownload?.addEventListener('click', downloadPhoto);
  photoFormat?.addEventListener('change', () => {
   if (lightboxDownload && lightboxImage) lightboxDownload.href = makeDownloadUrl(lightboxImage.src, photoFormat.value);
  });
