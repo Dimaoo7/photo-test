@@ -8,7 +8,7 @@ interface Props {
 const { album } = Astro.props;
 ---
 
-<div class="space-y-8" data-gallery data-album-title={album.title}>
+<div class="space-y-8" data-gallery>
  <div class="flex flex-col justify-between gap-4 border-y border-neutral-800 py-5 sm:flex-row sm:items-center">
   <div>
   <p class="text-xs uppercase tracking-[0.2em] text-neutral-500"><span data-en={`${album.photos.length} photographs`} data-ru={`${album.photos.length} фотографий`}>{album.photos.length} photographs</span></p>
@@ -34,9 +34,9 @@ const { album } = Astro.props;
       <img src={photo.image} alt={`${album.title}, ${photo.title}`} loading="lazy" class="w-full transition duration-700 group-hover:scale-[1.02]" />
      </button>
     </div>
-    <figcaption class="flex justify-between gap-4 pt-3 text-xs uppercase tracking-[0.16em] text-neutral-500">
+    <figcaption class="flex flex-wrap items-start justify-between gap-x-4 gap-y-2 pt-3 text-xs uppercase tracking-[0.16em] text-neutral-500">
      <span data-en={photo.title} data-ru={photo.titleRu}>{photo.title}</span>
-    <button type="button" data-photo-open data-photo-id={photo.id} data-photo-src={photo.download} data-photo-title={photo.title} data-photo-title-ru={photo.titleRu} class="border-b border-neutral-700 pb-1 text-[10px] text-neutral-400 transition hover:border-white hover:text-white" data-en="View / download" data-ru="Открыть / скачать">View / download</button>
+    <button type="button" data-photo-open data-photo-id={photo.id} data-photo-src={photo.download} data-photo-title={photo.title} data-photo-title-ru={photo.titleRu} class="shrink-0 border-b border-neutral-700 pb-1 text-[10px] text-neutral-400 transition hover:border-white hover:text-white" data-en="View / download" data-ru="Открыть / скачать">View / download</button>
     </figcaption>
    </figure>
   ))}
@@ -47,16 +47,18 @@ const { album } = Astro.props;
  <button type="button" data-lightbox-close class="absolute inset-0 cursor-default" aria-label="Close photo"></button>
  <div class="relative z-10 flex max-h-full w-full max-w-6xl flex-col">
   <button type="button" data-lightbox-close class="absolute right-0 top-0 z-10 flex h-11 w-11 items-center justify-center border border-white/40 bg-black/40 text-xl text-white transition hover:bg-white hover:text-black" aria-label="Close photo">×</button>
+  <button type="button" data-lightbox-prev class="absolute left-2 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center border border-white/40 bg-black/50 text-2xl text-white transition hover:bg-white hover:text-black md:-left-16" aria-label="Previous photo" title="Previous photo">‹</button>
+  <button type="button" data-lightbox-next class="absolute right-2 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center border border-white/40 bg-black/50 text-2xl text-white transition hover:bg-white hover:text-black md:-right-16" aria-label="Next photo" title="Next photo">›</button>
   <img data-lightbox-image src="" alt="" class="max-h-[72vh] w-full object-contain" />
   <div class="flex flex-col justify-between gap-4 border-t border-white/20 pt-4 sm:flex-row sm:items-center">
    <p data-lightbox-title class="text-sm uppercase tracking-[0.16em] text-white"></p>
-   <div class="flex items-center gap-3">
+  <div class="flex flex-wrap items-center justify-end gap-3">
     <label for="photo-format" class="text-xs uppercase tracking-[0.16em] text-neutral-400" data-en="Format" data-ru="Формат">Format</label>
     <select id="photo-format" data-photo-format class="border border-white/30 bg-black px-3 py-3 text-xs uppercase tracking-[0.16em] text-white outline-none focus:border-white">
      <option value="jpg">JPEG</option>
      <option value="webp">WEBP</option>
     </select>
-    <a data-lightbox-download href="" download class="border border-white bg-white px-5 py-3 text-xs uppercase tracking-[0.16em] text-black transition hover:bg-transparent hover:text-white" data-en="Download photo" data-ru="Скачать фото">Download photo</a>
+    <a data-lightbox-download href="" download class="whitespace-nowrap border border-white bg-white px-5 py-3 text-xs uppercase tracking-[0.16em] text-black transition hover:bg-transparent hover:text-white" data-en="Download photo" data-ru="Скачать фото">Download photo</a>
    </div>
   </div>
  </div>
@@ -72,6 +74,11 @@ const { album } = Astro.props;
  const lightboxTitle = lightbox?.querySelector('[data-lightbox-title]');
  const lightboxDownload = lightbox?.querySelector('[data-lightbox-download]');
  const photoFormat = lightbox?.querySelector('[data-photo-format]');
+ const photoButtons = [...(gallery?.querySelectorAll('[data-photo-open]') || [])];
+ const photoTriggers = photoButtons.filter((trigger, index, buttons) => buttons.findIndex((button) => button.dataset.photoId === trigger.dataset.photoId) === index);
+ const previousButton = lightbox?.querySelector('[data-lightbox-prev]');
+ const nextButton = lightbox?.querySelector('[data-lightbox-next]');
+ let currentIndex = 0;
  const labels = {
   en: { idle: 'Download full album', preparing: 'Preparing archive...', done: 'Archive downloaded', error: 'Download failed' },
   ru: { idle: 'Скачать весь альбом', preparing: 'Готовим архив...', done: 'Архив скачан', error: 'Не удалось скачать' },
@@ -85,8 +92,10 @@ const { album } = Astro.props;
   lightbox.hidden = true;
   document.body.classList.remove('lightbox-open');
  };
- const openLightbox = (trigger) => {
+ const showPhoto = (index) => {
+  const trigger = photoTriggers[index];
   if (!lightbox || !lightboxImage || !lightboxTitle || !lightboxDownload) return;
+  currentIndex = index;
   const source = trigger.dataset.photoSrc;
   const format = photoFormat?.value || 'jpg';
   lightboxImage.src = source;
@@ -97,12 +106,20 @@ const { album } = Astro.props;
   lightbox.hidden = false;
   document.body.classList.add('lightbox-open');
  };
- gallery?.querySelectorAll('[data-photo-open]').forEach((trigger) => trigger.addEventListener('click', () => openLightbox(trigger)));
+ const openLightbox = (trigger) => showPhoto(Math.max(photoTriggers.findIndex((photo) => photo.dataset.photoId === trigger.dataset.photoId), 0));
+ const movePhoto = (step) => showPhoto((currentIndex + step + photoTriggers.length) % photoTriggers.length);
+ photoButtons.forEach((trigger) => trigger.addEventListener('click', () => openLightbox(trigger)));
+ previousButton?.addEventListener('click', () => movePhoto(-1));
+ nextButton?.addEventListener('click', () => movePhoto(1));
  lightbox?.querySelectorAll('[data-lightbox-close]').forEach((closeButton) => closeButton.addEventListener('click', closeLightbox));
  photoFormat?.addEventListener('change', () => {
   if (lightboxDownload && lightboxImage) lightboxDownload.href = makeDownloadUrl(lightboxImage.src, photoFormat.value);
  });
- document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeLightbox(); });
+ document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') closeLightbox();
+  if (!lightbox?.hidden && event.key === 'ArrowLeft') movePhoto(-1);
+  if (!lightbox?.hidden && event.key === 'ArrowRight') movePhoto(1);
+ });
 
  button?.addEventListener('click', async () => {
   if (!label || !button) return;

@@ -16,7 +16,7 @@ The project is built with Astro and Tailwind CSS. It includes a bilingual interf
 - Individual photo downloads in `JPEG` or `WEBP`.
 - Full album download as a `ZIP` archive in the selected format.
 - Scroll-based reveal animation for album cards and photographs.
-- Camera intro animation on every page.
+- Camera intro animation on the homepage.
 - Open Graph, Twitter Card and Schema.org metadata.
 - Responsive layout for desktop and mobile screens.
 - Astro static output, ready for deployment to a static host.
@@ -126,7 +126,6 @@ Example shape:
 	description: 'A short English description.',
 	descriptionRu: 'Короткое описание на русском.',
 	cover: 'https://example.com/cover.jpg',
-	accent: 'series',
 	photos: [],
 }
 ```

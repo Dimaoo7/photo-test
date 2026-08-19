@@ -1,13 +1,15 @@
 ---
 import "../styles/global.css";
+import Analytics from '@vercel/analytics/astro';
 
 interface Props {
  title: string;
  description?: string;
  image?: string;
+ intro?: boolean;
 }
 
-const { title, description = "Профессиональный фотограф в Черногории.", image } = Astro.props;
+const { title, description = "Профессиональный фотограф в Черногории.", image, intro = false } = Astro.props;
 const structuredData = {
  '@context': 'https://schema.org',
  '@type': 'ProfessionalService',
@@ -36,26 +38,19 @@ const structuredData = {
   <meta name="twitter:description" content={description} />
   {image && <meta name="twitter:image" content={image} />}
   <link rel="preconnect" href="https://images.unsplash.com" />
-  <link rel="dns-prefetch" href="//images.unsplash.com" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <meta name="generator" content={Astro.generator} />
   <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   <title>{title}</title>
  </head>
  <body class="min-h-screen flex flex-col font-sans bg-neutral-950 text-white">
-   <div class="intro-screen" aria-hidden="true">
-    <div class="camera-animation">
-      <div class="camera-body">
-       <span class="camera-viewfinder"></span>
-       <span class="camera-lens"><span></span></span>
-       <span class="camera-shutter"></span>
-      </div>
-      <span class="camera-flash"></span>
-    </div>
-   </div>
-    <header class="mx-auto flex w-full max-w-7xl items-center justify-between border-b border-neutral-800 px-6 py-8">
-    <a href="/" class="text-xl font-bold uppercase tracking-widest text-white">Dmitry Kriukov</a>
-    <nav class="flex items-center gap-4 text-xs uppercase tracking-[0.16em] text-neutral-400 sm:gap-8">
+   {intro && <div class="intro-screen" aria-hidden="true">
+    <div class="camera-animation"><div class="camera-body">
+     <span class="camera-viewfinder"></span><span class="camera-lens"><span></span></span><span class="camera-shutter"></span>
+    </div><span class="camera-flash"></span></div>
+   </div>}
+    <header class="mx-auto flex w-full max-w-7xl flex-col gap-6 border-b border-neutral-800 px-6 py-8 sm:flex-row sm:items-center sm:justify-between">
+    <a href="/" class="whitespace-nowrap text-xl font-bold uppercase tracking-widest text-white">Dmitry Kriukov</a>
+    <nav class="flex w-full items-center justify-between gap-4 text-xs uppercase tracking-[0.16em] text-neutral-400 sm:w-auto sm:justify-normal sm:gap-8">
       <a href="/portfolio" class="transition-colors hover:text-white" data-en="Portfolio" data-ru="Портфолио">Portfolio</a>
       <a href="/#about" class="hidden transition-colors hover:text-white sm:block" data-en="About" data-ru="Обо мне">About</a>
       <a href="/#contacts" class="transition-colors hover:text-white" data-en="Contact" data-ru="Контакты">Contact</a>
@@ -68,7 +63,7 @@ const structuredData = {
    </nav>
   </header>
 
-  <main class="flex-grow w-full max-w-7xl mx-auto px-6 py-12">
+  <main class="grow w-full max-w-7xl mx-auto px-6 py-12">
    <slot />
   </main>
 
@@ -77,6 +72,8 @@ const structuredData = {
   </footer>
  </body>
 </html>
+
+<Analytics />
 
 <script is:inline>
  const languageButtons = document.querySelectorAll('[data-language]');
