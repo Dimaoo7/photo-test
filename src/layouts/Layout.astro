@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import Analytics from '@vercel/analytics/astro';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
  title: string;
@@ -40,6 +41,7 @@ const structuredData = {
   <link rel="preconnect" href="https://images.unsplash.com" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  <ClientRouter />
   <title>{title}</title>
  </head>
  <body class="min-h-screen flex flex-col font-sans bg-neutral-950 text-white">
@@ -67,8 +69,14 @@ const structuredData = {
    <slot />
   </main>
 
-  <footer class="w-full max-w-7xl mx-auto px-6 py-12 border-t border-neutral-800 text-center text-neutral-500 text-sm">
-   © {new Date().getFullYear()} Dmitry Kriukov. <span data-en="All rights reserved." data-ru="Все права защищены.">All rights reserved.</span>
+  <footer class="w-full max-w-7xl mx-auto border-t border-neutral-800 px-6 py-12 text-sm text-neutral-500">
+   <div class="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
+    <span>© {new Date().getFullYear()} Dmitry Kriukov.</span>
+    <div class="flex gap-5 uppercase tracking-[0.16em]">
+     <a href="/#contacts" class="transition hover:text-white" data-en="Contact" data-ru="Контакты">Contact</a>
+     <span data-en="All rights reserved." data-ru="Все права защищены.">All rights reserved.</span>
+    </div>
+   </div>
   </footer>
  </body>
 </html>

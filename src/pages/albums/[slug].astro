@@ -10,7 +10,7 @@ export function getStaticPaths() {
 const { album } = Astro.props;
 ---
 
-<Layout title={`${album.title} | Dmitry Kriukov`} description={album.description} image={album.cover}>
+<Layout title={`${album.title} | Фотограф в Черногории`} description={`${album.description} Фотограф в Черногории: ${album.location}.`} image={album.cover}>
  <a href="/portfolio" class="mb-10 inline-flex items-center gap-3 border border-neutral-700 px-5 py-3 text-xs uppercase tracking-[0.18em] text-neutral-300 transition hover:border-white hover:bg-white hover:text-black" data-en="← Back to portfolio" data-ru="← Назад к портфолио">← Back to portfolio</a>
  <header class="mb-12 grid gap-8 border-b border-neutral-800 pb-12 md:grid-cols-[1fr_0.8fr] md:items-end">
   <div>

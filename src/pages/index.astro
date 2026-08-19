@@ -4,15 +4,40 @@ import AlbumCard from '../components/AlbumCard.astro';
 import { albums } from '../data/albums';
 ---
 
-<Layout title="Dmitry Kriukov | Photographer in Montenegro" description="Wedding stories, portraits and honest frames on the Adriatic coast by Dmitry Kriukov." image={albums[0].cover} intro>
- <section class="grid min-h-[66vh] items-end gap-10 py-20 md:grid-cols-[1.25fr_0.75fr]" data-reveal>
-  <div>
-     <p class="mb-8 text-xs uppercase tracking-[0.28em] text-neutral-500" data-en="Photographer / Montenegro" data-ru="Фотограф / Черногория">Photographer / Montenegro</p>
-     <h1 class="max-w-4xl text-6xl font-medium leading-[0.95] tracking-tight text-white md:text-8xl" data-en="Light that stays." data-ru="Свет, который остается.">Light that stays.</h1>
+<Layout title="Фотограф в Черногории | Dmitry Kriukov" description="Свадебная и портретная фотография в Черногории: искренние истории на фоне гор и моря в Баре, Будве, Которе и Перасте." image={albums[0].cover} intro>
+ <section class="relative isolate grid min-h-[70vh] items-end overflow-hidden py-16 md:grid-cols-[1.1fr_0.9fr] md:py-24" data-reveal>
+  <img src={albums[0].cover} alt="Свадебная фотография на побережье Черногории" class="absolute inset-0 -z-20 h-full w-full object-cover" fetchpriority="high" />
+  <div class="absolute inset-0 -z-10 bg-gradient-to-r from-black/85 via-black/55 to-black/15"></div>
+  <div class="max-w-4xl">
+   <p class="mb-6 text-xs uppercase tracking-[0.28em] text-white/70" data-en="Wedding & portrait photographer / Montenegro" data-ru="Свадебный и портретный фотограф / Черногория">Wedding & portrait photographer / Montenegro</p>
+   <h1 class="max-w-3xl text-5xl font-medium leading-[0.98] tracking-tight text-white sm:text-6xl md:text-8xl" data-en="Wedding and portrait photography in Montenegro." data-ru="Свадебная и портретная фотография в Черногории.">Wedding and portrait photography in Montenegro.</h1>
   </div>
-  <div class="max-w-sm pb-2 md:justify-self-end">
-     <p class="text-lg leading-relaxed text-neutral-400" data-en="Wedding stories, portraits and honest frames on the Adriatic coast." data-ru="Свадебные истории, портреты и честные кадры на побережье Адриатики.">Wedding stories, portraits and honest frames on the Adriatic coast.</p>
-     <a href="/portfolio" class="mt-8 inline-flex items-center gap-4 border-b border-white pb-2 text-xs uppercase tracking-[0.18em] text-white transition-opacity hover:opacity-60" data-en="View portfolio ↗" data-ru="Смотреть портфолио ↗">View portfolio ↗</a>
+  <div class="mt-10 max-w-sm md:justify-self-end">
+   <p class="text-lg leading-relaxed text-white/80" data-en="I preserve honest emotions among the mountains and sea, from Bar and Budva to Kotor and Perast." data-ru="Сохраняю искренние эмоции на фоне гор и моря: снимаю в Баре, Будве, Которе и Перасте.">I preserve honest emotions among the mountains and sea, from Bar and Budva to Kotor and Perast.</p>
+   <div class="mt-8 flex flex-wrap gap-4">
+    <a href="#contacts" class="inline-flex border border-white bg-white px-5 py-3 text-xs uppercase tracking-[0.18em] text-black transition hover:bg-transparent hover:text-white" data-en="Check your date" data-ru="Узнать свободную дату">Check your date</a>
+    <a href="/portfolio" class="inline-flex border border-white/50 px-5 py-3 text-xs uppercase tracking-[0.18em] text-white transition hover:border-white" data-en="See the work" data-ru="Смотреть работы">See the work</a>
+   </div>
+  </div>
+ </section>
+
+ <section id="services" class="border-y border-neutral-800 py-16">
+  <div class="mb-8 max-w-xl">
+   <p class="mb-3 text-xs uppercase tracking-[0.24em] text-neutral-500" data-en="Choose your story" data-ru="Выберите свою историю">Choose your story</p>
+   <h2 class="text-3xl font-medium text-white" data-en="A calm process, photographs you will keep." data-ru="Спокойный процесс и фотографии, к которым хочется возвращаться.">A calm process, photographs you will keep.</h2>
+  </div>
+  <div class="grid gap-px bg-neutral-800 md:grid-cols-3">
+   {[
+    ['Love Story', 'Лавстори', 'For two people, a place you love and a day that feels like yours.', 'Для двоих, любимого места и дня, который будет только вашим.'],
+    ['Weddings', 'Свадьбы', 'From the first quiet morning to the last dance, without staged moments.', 'От тихого утра до последнего танца, без постановочных эмоций.'],
+    ['Portrait sessions', 'Индивидуальные съемки', 'A relaxed walk and images that feel like you, not a catalogue pose.', 'Спокойная прогулка и фотографии, в которых вы узнаете себя.'],
+   ].map(([en, ru, copyEn, copyRu]) => (
+    <article class="bg-neutral-950 p-6 md:p-8">
+     <h3 class="text-xl font-medium text-white" data-en={en} data-ru={ru}>{en}</h3>
+     <p class="mt-4 min-h-16 text-sm leading-relaxed text-neutral-400" data-en={copyEn} data-ru={copyRu}>{copyEn}</p>
+     <a href="#contacts" class="mt-6 inline-flex border-b border-neutral-600 pb-1 text-xs uppercase tracking-[0.16em] text-white transition hover:border-white" data-en="Ask about a date ↗" data-ru="Узнать о дате ↗">Ask about a date ↗</a>
+    </article>
+   ))}
   </div>
  </section>
 
@@ -20,7 +45,7 @@ import { albums } from '../data/albums';
   <div class="mb-8 flex items-end justify-between gap-6">
    <div>
     <p class="mb-3 text-xs uppercase tracking-[0.24em] text-neutral-500" data-en="Selected work" data-ru="Избранное">Selected work</p>
-    <h2 class="text-3xl font-medium text-white" data-en="Recent stories" data-ru="Последние истории">Recent stories</h2>
+   <h2 class="text-3xl font-medium text-white" data-en="Selected stories" data-ru="Избранные истории">Selected stories</h2>
    </div>
     <a href="/portfolio" class="hidden text-xs uppercase tracking-[0.18em] text-neutral-500 transition hover:text-white sm:block" data-en="All albums →" data-ru="Все альбомы →">All albums →</a>
   </div>
@@ -30,18 +55,19 @@ import { albums } from '../data/albums';
  </section>
 
  <section id="about" class="grid gap-8 border-y border-neutral-800 py-20 md:grid-cols-2">
-    <p class="text-xs uppercase tracking-[0.24em] text-neutral-500" data-en="About the photographer" data-ru="О фотографе">About the photographer</p>
+    <p class="text-xs uppercase tracking-[0.24em] text-neutral-500" data-en="The person behind the camera" data-ru="Кто снимает вашу историю">The person behind the camera</p>
   <div class="max-w-xl">
-     <h2 class="text-3xl font-medium leading-tight text-white" data-en="I photograph how it feels, not just what happens." data-ru="Снимаю не события, а то, как они ощущаются.">I photograph how it feels, not just what happens.</h2>
-     <p class="mt-6 leading-relaxed text-neutral-400" data-en="I work quietly and attentively, noticing the gestures, pauses and small details that make your story yours." data-ru="Работаю спокойно и внимательно: замечаю жесты, паузы и маленькие детали, из которых складывается ваша история.">I work quietly and attentively, noticing the gestures, pauses and small details that make your story yours.</p>
+     <h2 class="text-3xl font-medium leading-tight text-white" data-en="You do not need to know how to pose." data-ru="Вам не нужно уметь позировать.">You do not need to know how to pose.</h2>
+     <p class="mt-6 leading-relaxed text-neutral-400" data-en="I help you relax before the camera and work quietly, noticing the gestures, pauses and small details that make your story yours. We will choose a place where you can be yourselves, away from the tourist rush when possible." data-ru="Я помогаю расслабиться перед камерой и спокойно замечаю жесты, паузы и детали, из которых складывается ваша история. Вместе выберем место, где можно быть собой и, если возможно, уйти от туристической суеты.">I help you relax before the camera and work quietly, noticing the gestures, pauses and small details that make your story yours. We will choose a place where you can be yourselves, away from the tourist rush when possible.</p>
+     <a href="#contacts" class="mt-8 inline-flex border border-white px-5 py-3 text-xs uppercase tracking-[0.18em] text-white transition hover:bg-white hover:text-black" data-en="Tell me your idea" data-ru="Рассказать о вашей идее">Tell me your idea</a>
   </div>
  </section>
 
  <section id="contacts" class="py-20">
     <p class="mb-4 text-xs uppercase tracking-[0.24em] text-neutral-500" data-en="A new story" data-ru="Новая история">A new story</p>
   <div class="flex flex-col justify-between gap-8 md:flex-row md:items-end">
-     <h2 class="max-w-2xl text-4xl font-medium leading-tight text-white md:text-6xl" data-en="Let's find your light." data-ru="Давайте выберем ваш свет.">Let's find your light.</h2>
-     <a href="mailto:hello@example.com" class="inline-flex w-fit border border-white px-6 py-4 text-xs uppercase tracking-[0.18em] text-white transition hover:bg-white hover:text-black" data-en="Write to me" data-ru="Написать мне">Write to me</a>
+   <h2 class="max-w-2xl text-4xl font-medium leading-tight text-white md:text-6xl" data-en="Let's plan a story that feels like you." data-ru="Давайте спланируем историю, в которой вы узнаете себя.">Let's plan a story that feels like you.</h2>
+   <a href="mailto:hello@example.com" class="inline-flex w-fit border border-white px-6 py-4 text-xs uppercase tracking-[0.18em] text-white transition hover:bg-white hover:text-black" data-en="Check my date" data-ru="Узнать свободную дату">Check my date</a>
   </div>
  </section>
 </Layout>
